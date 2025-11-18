@@ -55,16 +55,16 @@ public class TestUtils {
     }
 
     // TODO: Uncomment this after implementing filtering by name.
-//    public static PosDto retrievePosByName(String name) {
-//        return given()
-//                .contentType(ContentType.JSON)
-//                .queryParam("name", name)
-//                .when()
-//                .get("/api/pos/filter")
-//                .then()
-//                .statusCode(200)
-//                .extract().as(PosDto.class);
-//    }
+    public static PosDto retrievePosByName(String name) {
+        return given()
+                .contentType(ContentType.JSON)
+                .queryParam("name", name)
+                .when()
+                .get("/api/pos/filter")
+                .then()
+                .statusCode(200)
+                .extract().as(PosDto.class);
+    }
 
     public static List<PosDto> createPos(List<PosDto> posList) {
         return posList.stream()
