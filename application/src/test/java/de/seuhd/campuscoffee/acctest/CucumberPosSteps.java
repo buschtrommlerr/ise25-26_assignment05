@@ -92,7 +92,11 @@ public class CucumberPosSteps {
     }
 
     // TODO: Add Given step for new scenario
-
+    @Given("a POS list with the following three elements")
+    public void aPosListWithTheFollowingThreeElements(List<PosDto> posList) {
+        createdPosList = createPos(posList);
+        assertThat(createdPosList).size().isEqualTo(3);
+    }
     // When -----------------------------------------------------------------------
 
     @When("I insert POS with the following elements")
@@ -102,7 +106,26 @@ public class CucumberPosSteps {
     }
 
     // TODO: Add When step for new scenario
-
+    @When("I update the POS {string} to have description {string}")
+    public void updateThePosWithNameToHaveDescription(String name, String newDescription) {
+        PosDto posToUpdate = createdPosList.stream()
+                .filter(pos -> pos.name().equals(name))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("POS with name " + name + " not found"));
+        PosDto updatedPosDto = PosDto.builder()
+                .id(posToUpdate.id())
+                .name(posToUpdate.name())
+                .description(newDescription)
+                .type(posToUpdate.type())
+                .campus(posToUpdate.campus())
+                .street(posToUpdate.street())
+                .houseNumber(posToUpdate.houseNumber())
+                .postalCode(posToUpdate.postalCode())
+                .city(posToUpdate.city())
+                .build();
+        updatedPos = updatePos(List.of(updatedPosDto)).get(0);
+        assertThat(updatedPos.description()).isEqualTo(newDescription);
+    }
     // Then -----------------------------------------------------------------------
 
     @Then("the POS list should contain the same elements in the same order")
@@ -114,4 +137,9 @@ public class CucumberPosSteps {
     }
 
     // TODO: Add Then step for new scenario
+    @Then("only that POS {string} should be updated in the POS list with the new description {string}")
+    public void thePosWithNameShouldHaveDescription(String name, String newDescription) {
+        PosDto retrievedPos = retrievePosByName(name);
+        assertThat(retrievedPos.description()).isEqualTo(newDescription);
+    }
 }
